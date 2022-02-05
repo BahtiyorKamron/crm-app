@@ -1,0 +1,15 @@
+role{
+1 - superadmin
+2 - admin
+3 - buxgalter
+4 - o'qituvchi
+5 - o'quvchi
+}
+/login - {
+   login - qilish uchun
+}
+/join_user - {
+    post - user qo'shish uchun
+    get - userlarni ko'rish uchun
+    put - userni edit qilish uchun
+}
