@@ -2,7 +2,6 @@ const Joi = require('joi')
 
 const schema = Joi.object({
     name: Joi.string()
-        .alphanum()
         .min(3)
         .max(30)
         .required(),
@@ -28,10 +27,10 @@ const schema = Joi.object({
         .min(12)
         .max(12)
         .required(),
-    group_id:Joi.number(),
-    role:Joi.number()
-         .required(),
-    archive:Joi.boolean()
+    groupId:Joi.number().required(),
+    directionId:Joi.number().required(),
+    archive:Joi.boolean(),
+
 
 
 })
@@ -50,6 +49,54 @@ const signup = Joi.object({
 
 
 })
+const teacher = Joi.object({
+  name:Joi.string()
+       .min(3)
+       .max(30)
+       .required(),
+  lastname:Joi.string()
+       .min(3)
+       .max(30)
+       .required(),
+  phone1:Joi.string()
+       .min(12)
+       .max(12)
+       .required(),
+    phone2:Joi.string()
+        .min(12)
+        .max(12)
+        .required(),
+  direction: Joi.number()
+      .integer()
+      .required(),
+  groupId:Joi.number()
+      .required(),
+  age: Joi.number()
+      .integer()
+      .required(),
+  password: Joi.string()
+      .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      .min(8)
+      .max(16)
+      .required()
+})
+const guruh = Joi.object({
+  name:Joi.string()
+      .required(),
+  teacherId:Joi.number()
+      .required(),
+  directionId:Joi.number()
+      .required()
+
+
+})
+const joi1 = Joi.object({
+    id:Joi.number().required(),
+    participate:Joi.number(),
+    ball:Joi.number()
+
+})
+
 module.exports = {
-  schema,signup
+  schema,signup,teacher,guruh,joi1
 }

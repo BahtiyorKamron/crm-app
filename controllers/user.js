@@ -14,8 +14,8 @@ module.exports = class User {
            age: req.body.age,
            phone1: req.body.phone1,
            phone2: req.body.phone2,
-           role: req.body.role,
-           group_id:  req.body.group_id,
+           groupId:  req.body.groupId,
+           directionId: req.body.directionId,
            password:  req.body.password
          })
           if (validationResult.error) {

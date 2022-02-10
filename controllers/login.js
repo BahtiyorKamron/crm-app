@@ -8,6 +8,7 @@ module.exports = class SignUp {
         let validationResult = await joi.signup.validate({ username : req.body.username , password : req.body.password })
         if (validationResult.error) throw new Error(validationResult.error.details[0].message)
          let user = await model.login(req.body)
+          if( !user ) throw new Error("Check connection")
           if(user.error) throw new Error(user.error)
           if( user.token ){
               res.cookie('token', user.token)
@@ -20,6 +21,7 @@ module.exports = class SignUp {
           }
       } catch (e) {
         res.status(404).json({
+          status : 400,
           data:null,
           message:e.message
         })

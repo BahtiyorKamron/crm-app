@@ -1,18 +1,20 @@
 const pg = require('../utils/pg')
 
 module.exports = class User {
-  static async join_user({name,lastname,age,phone1,phone2,group_id,password,role}) {
+  static async join_user({name,lastname,age,phone1,phone2,groupId,password,directionId}) {
       try {
-          if(role==1 || role=='1') return { error: "Bu huquqni bera olmaysiz ( role - 1)"}
+          // if(role==1 || role=='1') return { error: "Bu huquqni bera olmaysiz ( role - 1)"}
         let users = await pg(false,`select * from users where archive='true' `)
+        let group = await pg(true,"select * from groups where id=$1",groupId)
+        if(!group) throw new Error("Bunday guruh ochilmaganer")
         let user = users.find(u => u.name==name  && u.password==password)
         if(!user){
-          let login = await pg(true,`insert into users(name,lastname,password,phone1,phone2,role,age,group_id) values(
+          let login = await pg(true,`insert into users(name,lastname,password,phone1,phone2,role,age,group_id,direction) values(
             $1,$2,$3,$4,$5,case
             when $6<>1 then $6
             else 0 
             end
-            ,$7,$8) returning * `,name,lastname,password,phone1,phone2,role,age,group_id)
+            ,$7,$8,$9) returning * `,name,lastname,password,phone1,phone2,5,age,groupId,directionId)
           return login
         }
         else{
