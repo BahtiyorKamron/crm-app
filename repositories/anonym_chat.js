@@ -3,7 +3,7 @@ const pg = require("../utils/pg")
 module.exports = class AnonymChat{
     static async post(message){
         try{
-            let post_message = await pg(true,"insert into anonymous_chat(message) values($1) returning *",message)
+            let post_message = await pg(true,"insert into anonymous_chat(chat) values($1) returning *",message)
             if(!post_message) throw new Error("Xatolik")
             else return post_message
         }catch(e){

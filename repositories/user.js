@@ -1,7 +1,7 @@
 const pg = require('../utils/pg')
 
 module.exports = class User {
-  static async join_user({name,lastname,age,phone1,phone2,groupId,password,directionId}) {
+  static async post({name,lastname,age,phone1,phone2,groupId,password,directionId}) {
       try {
           // if(role==1 || role=='1') return { error: "Bu huquqni bera olmaysiz ( role - 1)"}
         let users = await pg(false,`select * from users where archive='true' `)
@@ -12,7 +12,7 @@ module.exports = class User {
           let login = await pg(true,`insert into users(name,lastname,password,phone1,phone2,role,age,group_id,direction) values(
             $1,$2,$3,$4,$5,case
             when $6<>1 then $6
-            else 0 
+            else 0
             end
             ,$7,$8,$9) returning * `,name,lastname,password,phone1,phone2,5,age,groupId,directionId)
           return login
@@ -25,32 +25,24 @@ module.exports = class User {
       }
 
   }
-  static async show_user({id}){
+  static async get(id){
       try{
-          let users = null
-          if(!id){
-               users = await pg(false,`select * from users`)
-          }
-          else{
-               users = await pg(false,'select * from users where id=$1',id)
-          }
-          if( users ){
-              return users
-          } else{
-              return { message : "userlar yo'q" }
-          }
+          if(!id) return (await pg(false,"select * from users"))
+          if( isNaN(id) ) throw new Error("ID raqam bo'lishi kerak")
+          if( !( await pg(true,"select * from users where id=$1",id))) throw new Error("bunday user topilmadi")
+          return ( await pg(true,"select * from users where id=$1",id) )
       }catch (e){
-          console.log(e.message)
+          return { error : e.message }
       }
   }
-  static async edit_user({id,name,lastname,age,phone1,phone2,archive,role,password,group_id}){
+  static async edit_user({id,name,lastname,age,phone1,phone2,archive,role,password,groupId}){
       try{
 
           if(!id) return { error:"id bo'sh"}
 
           let edite_user = await pg(true,`
       with old_data as (
-           select 
+           select
                  name,
                  lastname,
                  group_id,
@@ -62,16 +54,16 @@ module.exports = class User {
            from users where id=$1
       )update users set
             name = (
-                case 
+                case
                     when length($2)>1 then $2
                     else o.name
-                end 
+                end
             ),
             lastname = (
-                case 
+                case
                     when length($3)>1 then $3
                     else o.lastname
-                end                     
+                end
             ),
             password = (
                 case
@@ -80,40 +72,40 @@ module.exports = class User {
                 end
             ),
             phone1 = (
-                case 
+                case
                      when length($5)=12 then $5
                      else o.phone1
                 end
             ),
             phone2 = (
-                case 
+                case
                      when length($6)=12 then $6
                      else o.phone2
                 end
             ),
             role = (
-                case 
+                case
                     when $7<>1 then $7
                     else o.role
-                end 
+                end
             ),
             group_id = (
-                case 
+                case
                     when $8>0 then $8
                     else o.group_id
                 end
             ),
-            archive = ( 
-                case 
+            archive = (
+                case
                     when ($9=true or $9=false) then $9
                     else o.archive
                 end
-               
+
             )
             from old_data as o
             where users.id = $1
             returning users.*
-`,id,name,lastname,password,phone1,phone2,role,group_id,archive)
+`,id,name,lastname,password,phone1,phone2,role,groupId,archive)
           if(edite_user) return edite_user
 
 
@@ -134,3 +126,4 @@ module.exports = class User {
 
   }
 }
+// curl -i -X POST -H 'Content-Type: application/json' -d '{"username": "superadmin", "password": "password"}' https://srm-app-site.herokuapp.com/

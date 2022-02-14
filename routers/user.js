@@ -1,10 +1,10 @@
 const router = require('express').Router()
 const User = require('../controllers/user')
-router.route('/join_user')
+router.route('/users')
       .post(User.join)
       .get(User.get)
       .put(User.update)
-router.route('/join_user/:id')
+router.route('/users/:id')
     .delete(User.delete)
     .get(User.get)
 module.exports = router

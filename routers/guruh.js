@@ -9,3 +9,4 @@ router.route("/guruh/:id")
       .get(Guruh.get)
       .delete(Guruh.delete)
 module.exports = router
+// 13.48.137.108:5432

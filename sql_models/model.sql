@@ -2,12 +2,12 @@ create table users(
     id serial not null primary key,
     name varchar(32) not null,
     lastname varchar(32) not null,
-    password varchar(32) not null ,
+    password varchar(128) not null ,
     phone1 varchar(12) not null,
     role int not null,
     phone2 varchar(12) not null,
     age int not null,
-    direction int references direction(id) on delete cascade,
+    direction_id int references direction(id) on delete cascade,
     group_id int  references groups(id) on delete cascade,
     archive boolean default true  not null
 );

@@ -3,7 +3,14 @@ module.exports = class MiddleWare {
   static async middle(req,res,next){
    try {
        let for_super_admin = [
-           '/join_user'
+           '/user',
+           '/teachers',
+           '/guruh',
+           '/davomat',
+           '/join_user',
+           '/anonym-chat',
+           '/tolov',
+           '/user/students/'
        ]
        if(req.url === '/login') return next()
 

@@ -21,7 +21,7 @@ module.exports = class User {
           if (validationResult.error) {
        return res.status(400).send(validationResult.error.details[0].message);
        }
-        let login = await model.join_user(req.body)
+        let login = await model.post(req.body)
         if(login.role){
 
           res.status(200).json({
@@ -50,26 +50,20 @@ module.exports = class User {
 
   static async get (req,res){
       try{
-          let users = null
-          if(req.params){
-               users = await model.show_user(req.params)
-          }else{
-               users = await model.show_user()
-          }
-          if(!users.length) throw new Error('Bunday foydalanuvchi topilmadi')
-          if(users.message){
+         let users = await model.get(req.params.id)
+         if(!users) throw new Error("Check your connection")
+         if( users.error ) throw new Error(users.error)
+         res.status(200)
+            .json({
+               message : "Foydalanuvchi",
+               data : users,
+               status : 200
+            })
 
-              res.status(404).json({
-                  message:users.message,
-                  data:null
-              })
 
-          }else{
-              res.status(200).json({
-                  message:"userlar",
-                  data:users
-              })
-          }
+
+
+
       }
       catch (e){
           res.status(404).json({
