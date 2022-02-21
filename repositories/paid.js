@@ -34,7 +34,6 @@ module.exports = class Paid {
     }
     static async put({id,turi,userId,amount,term,debt}){
         try{
-            console.log(id,turi,userId,amount,term,debt)
             let paid = await pg(true,"select * from paid where id=$1",id)
             if(!paid) throw new Error("Bunday IDli tolov topilmadi")
             let edited_paid = await pg(true,`

@@ -1,3 +1,4 @@
+const { required } = require('joi')
 const Joi = require('joi')
 
 const schema = Joi.object({
@@ -70,7 +71,7 @@ const teacher = Joi.object({
       .integer()
       .required(),
   groupId:Joi.number()
-      .required(),
+      ,
   age: Joi.number()
       .integer()
       .required(),
@@ -96,7 +97,11 @@ const joi1 = Joi.object({
     ball:Joi.number()
 
 })
+const info = Joi.object({
+  name:Joi.string().required(),
+  phone_number:Joi.string().min(12).max(12).required()
+})
 
 module.exports = {
-  schema,signup,teacher,guruh,joi1
+  schema,signup,teacher,guruh,joi1,info
 }

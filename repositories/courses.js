@@ -12,14 +12,18 @@ module.exports = class Courses {
       return { error : e.message }
     }
   }
-  static async get( id ){
+  static async get( {id} ){
     try{
+
         if(id){
+        
           let courses = await pg(true,`select * from courses where id=$1`,(id))
           if( !courses ) throw new Error( "Topilmadi" )
           return courses
         }else{
-          return (await pg(false,"select * from courses"))
+
+          let courses = await pg(false,"select * from courses")
+          return courses
         }
 
 

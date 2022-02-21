@@ -1,11 +1,12 @@
 const joi = require('../validation/joi')
 const jwt = require('../utils/jwt')
+
 const model = require('../repositories/user')
 module.exports = class User {
   static async join(req,res){
      try {
-       if( !req.headers.cookie ) throw new Error('Sizda token yoq , token uchun login qiling')
-       let token = jwt.verify((req.headers.cookie.split('='))[1])
+       
+       let token = jwt.verify((req.headers.cookie.split('='))[1]).split('|')[0]
        if(['1','2'].includes(token)){
          if(+token!==1 && req.body.role==1 ) throw new Error("Sizda buni amalga oshirishish uchun huquq yo'q")
          let validationResult = await joi.schema.validate({
@@ -50,6 +51,10 @@ module.exports = class User {
 
   static async get (req,res){
       try{
+        let role = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[0];
+        let id = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[1];
+        if(!['1','2','3'].includes(role)) throw new Error("Sizda bunday huquq yo'q")
+
          let users = await model.get(req.params.id)
          if(!users) throw new Error("Check your connection")
          if( users.error ) throw new Error(users.error)
@@ -74,6 +79,10 @@ module.exports = class User {
   }
   static async update(req,res){
       try {
+        let role = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[0];
+        let id = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[1];
+        if(!['1','2','3'].includes(role)) throw new Error("Sizda bunday huquq yo'q")
+
           let updated_user = await model.edit_user(req.body)
           if(req.body.role=='1' || req.body.role==1) throw new Error('1 - bu  rolni hech kimga berilmaydi')
           if(updated_user.error) throw new Error(updated_user.error)
@@ -91,6 +100,10 @@ module.exports = class User {
   }
   static async delete(req,res){
       try{
+        let role = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[0];
+        let id = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[1];
+        if(!['1','2','3'].includes(role)) throw new Error("Sizda bunday huquq yo'q")
+
           let deleted_user = await model.delete(req.params)
 
           if(deleted_user.error) throw new Error(deleted_user.error)

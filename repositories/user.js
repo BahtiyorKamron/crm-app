@@ -3,7 +3,6 @@ const pg = require('../utils/pg')
 module.exports = class User {
   static async post({name,lastname,age,phone1,phone2,groupId,password,directionId}) {
       try {
-          // if(role==1 || role=='1') return { error: "Bu huquqni bera olmaysiz ( role - 1)"}
         let users = await pg(false,`select * from users where archive='true' `)
         let group = await pg(true,"select * from groups where id=$1",groupId)
         if(!group) throw new Error("Bunday guruh ochilmaganer")

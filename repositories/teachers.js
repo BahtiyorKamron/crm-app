@@ -16,15 +16,15 @@ module.exports = class Teachers {
           return { error : e.message }
        }
      }
-     static async post({name,lastname,phone1,phone2,direction,age,password,groupId}){
+     static async post({name,lastname,phone1,phone2,direction,age,password}){
        try {
          let teachers = await pg(false,`select * from users where archive = true and role=4`)
           let teacher = teachers.find(f => f.name==name && f.password==password)
           if(teacher) throw new Error("Bunday o'qituvchi avvaldan mavjuda!")
-          let post_teachers = await pg(false,`insert into users(name,lastname,role,phone1,phone2,password,age,direction,group_id) values($1,$2,$3,$4,$5,$6,$7,$8,$9) returning *`,
-         name,lastname,4,phone1,phone2,password,age,direction,groupId
+          let post_teachers = await pg(false,`insert into users(name,lastname,role,phone1,phone2,password,age,direction_id) values($1,$2,$3,$4,$5,$6,$7,$8) returning *`,
+         name,lastname,4,phone1,phone2,password,age,direction
         )
-          console.log(post_teachers);
+        
           if(post_teachers){ return post_teachers  }
           else throw new Error("Xatolik")
        } catch (e) {
@@ -69,7 +69,7 @@ module.exports = class Teachers {
                    else o.password
                end
              ),
-             direction = (
+             direction_id = (
                case
                    when $7>0 then $7
                    else o.direction

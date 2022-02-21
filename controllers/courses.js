@@ -1,8 +1,14 @@
 const model = require('../repositories/courses')
+const jwt = require('../utils/jwt')
+
 
 module.exports = class Courses{
   static async post(req,res){
     try {
+      let role = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[0];
+      let id = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[1];
+      if(!['1','2','4'].includes(role)) throw new Error("Sizda bunday huquq yo'q")
+
       let post_course = await model.post(req.body)
       if( post_course.error ) throw new Error( post_course.error )
       res.status(201)
@@ -23,17 +29,16 @@ module.exports = class Courses{
   static async get(req,res){
 
     try {
-      let get_courses = await model.get(req.params.id)
+      
+      let get_courses = await model.get(req.params)
       if( get_courses.error ) throw new Error( get_courses.error )
-      res.status(200)
-         .json({
-           message : "Kurslar",
-           data : get_courses,
-           status : 200
-         })
+      res.status(200).json({
+        message :  "Kurslar",
+        data    :  get_courses,
+        status  :  200
+      })
     } catch (e) {
-      res.status(404)
-         .json({
+      res.status(404).json({
            message : e.message,
            data : null,
            status : 404
@@ -42,6 +47,10 @@ module.exports = class Courses{
   }
   static async put(req,res){
     try{
+      let role = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[0];
+      let id = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[1];
+      if(!['1','2','4'].includes(role)) throw new Error("Sizda bunday huquq yo'q")
+
       let edit_course = await model.put(req.body)
       if( edit_course.error ) throw new Error( edit_course.error )
       res.status(200)
@@ -60,6 +69,10 @@ module.exports = class Courses{
   }
   static async delete(req,res){
     try {
+      let role = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[0];
+      let id = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[1];
+      if(!['1','2','4'].includes(role)) throw new Error("Sizda bunday huquq yo'q")
+
         let target = req.body.id || req.params.id
         let delete_course = await model.delete(target)
         if(delete_course.error) throw new Error(delete_course)

@@ -1,4 +1,6 @@
 const model = require("../repositories/paid")
+const jwt = require('../utils/jwt')
+
 
 module.exports = class Paid {
     static async post(req,res){

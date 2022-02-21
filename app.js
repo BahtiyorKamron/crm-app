@@ -15,6 +15,7 @@ const Courses = require("./routers/courses")
 const Pariticepents = require("./routers/participent")
 const AnonymChat = require("./routers/anonym_chat")
 const Students = require("./routers/student")
+const Info_From_Client = require('./routers/info_from_client')
 
 app.use( express.json() )
 app.use( MiddleWare.middle )
@@ -30,6 +31,7 @@ app.use( Pariticepents)
 app.use( Courses )
 app.use( AnonymChat )
 app.use( Students )
+app.use( Info_From_Client )
 
 
 app.listen(config.PORT,()=>console.log(`http://localhost:${config.PORT}`))

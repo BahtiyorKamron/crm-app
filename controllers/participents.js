@@ -1,9 +1,12 @@
 const e = require("express")
 const model = require("../repositories/participent")
+const jwt = require('../utils/jwt')
+
 
 module.exports = class Participent {
     static async get(req,res){
         try{
+
             let get_participent = await model.get(req.params.id)
             if( !get_participent ) throw new Error("Check connection")
             if( get_participent.error ) throw new Error( get_participent.error )
@@ -24,6 +27,7 @@ module.exports = class Participent {
     }
     static async post(req,res){
         try{
+
             let post_participent = await model.post( req.body )
             if( !post_participent ) throw new Error("Check connection")
             if( post_participent.error ) throw new Error( post_participent.error )
@@ -66,6 +70,7 @@ module.exports = class Participent {
     }
     static async delete(req,res){
         try{
+
             let target = req.params.id || req.body.id
             let delete_participent = await model.delete(target)
             if( delete_participent.error ) throw new Error( delete_participent.error )

@@ -7,7 +7,7 @@ router.route("/user/students")
       .delete( Students.delete )
       .put( Students.put )
 router.route("/user/students/:id")
-      .get( Students.get )
+      .get( Students.get )    
       .delete( Students.delete )
 
 module.exports = router

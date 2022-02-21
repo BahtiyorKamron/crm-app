@@ -1,8 +1,16 @@
 const model = require("../repositories/student.js")
 const student = require("../validation/joi").schema
+const jwt = require('../utils/jwt')
+
 module.exports = class Students {
   static async get(req,res){
     try {
+
+      let role = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[0];
+      let id = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[1];
+      if(!['1','2'].includes(role)) throw new Error("Sizda bunday huquq yo'q")
+
+
       let students = await model.get( req.params.id )
       if( !students ) throw new Error("Check your connection")
       if( students.error ) throw new Error( students.error )
@@ -23,6 +31,12 @@ module.exports = class Students {
   }
   static async post(req,res){
     try {
+       
+      let role = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[0];
+      let id = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[1];
+
+      if(!['1','2'].includes(role)) throw new Error("Sizda bunday huquq yo'q")
+
         let validation = student.validate(({
           name: req.body.name,
           lastname:  req.body.lastname,
@@ -33,6 +47,7 @@ module.exports = class Students {
           directionId: req.body.directionId,
           password:  req.body.password
         }))
+
 
         if (validation.error) throw new Error((validation.error.details[0].message))
         let post_student = await model.post(req.body)
@@ -55,6 +70,13 @@ module.exports = class Students {
   }
   static async delete(req,res){
     try {
+      if(!req.headers.cookie) throw new Error("Sizga mumkin emas")
+
+
+      let role = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[0];
+      let id = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[1];
+      if(!['1','2'].includes(role)) throw new Error("Sizda bunday huquq yo'q")
+
       let target = req.params.id || req.body.id
       let delete_student = await model.delete(target)
       if( !delete_student ) throw new Error(delete_student)
@@ -76,7 +98,12 @@ module.exports = class Students {
   }
   static async put(req,res){
     try{
-        
+      if(!req.headers.cookie) throw new Error("Sizga mumkin emas")
+
+      let role = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[0];
+      let id = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[1];
+      if(!['1','2'].includes(role)) throw new Error("Sizda bunday huquq yo'q")
+
         let edit_student = await model.put( req.body )
         if( !edit_student ) throw new Error("Check your connection")
         if( edit_student.error ) throw new Error( edit_student.error )

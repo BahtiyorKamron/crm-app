@@ -11,7 +11,6 @@ module.exports = class SignUp {
           if(!user){
               return { error:"Bunday foydalanuvchi topilmadi" }
           }else{
-              console.log(user)
               let role = {
                   1:"Superadmin",
                   2:"Admin",
@@ -20,8 +19,8 @@ module.exports = class SignUp {
                   5:"O'quvchi"
               }
               return {
-                  token : jwt.sign(user.role) ,
-                  role : role[user.role]
+                  token : jwt.sign( user.role + "|" + user.id ) ,
+                  role  : role[user.role]
               }
           }
       } catch (e) {

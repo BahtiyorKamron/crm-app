@@ -9,5 +9,5 @@ router.route("/courses")
 router.route("/courses/:id")
       .get( Courses.get )
       .delete( Courses.delete )
-      
+
 module.exports = router

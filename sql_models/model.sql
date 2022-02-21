@@ -8,7 +8,7 @@ create table users(
     phone2 varchar(12) not null,
     age int not null,
     direction_id int references direction(id) on delete cascade,
-    group_id int  references groups(id) on delete cascade,
+    group_id int,
     archive boolean default true  not null
 );
 
@@ -93,7 +93,20 @@ create table participent(
    name varchar(64) not null
 );
 
-create table anonymous_chat(
-   id serial primary key not null,
+create table chat(
+   id serial not null primary key,
+   just_user_id uuid not null references just_user(contact_id) on delete cascade,
    message varchar(2048) not null
 );
+
+CREATE TABLE just_user (
+    id serial not null ,
+    name varchar(64) default user,
+    contact_id uuid DEFAULT uuid_generate_v4 () primary key
+);
+
+create table infos_from_clients(
+  id serial not null,
+  name varchar(64) not null,
+  phone varchar(12) not null
+)

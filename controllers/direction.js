@@ -1,9 +1,14 @@
 const model = require('../repositories/direction')
+const jwt = require('../utils/jwt')
+
 
 module.exports = class Directions {
   static async get(req,res){
     try {
-      console.log(req.params);
+      let role = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[0];
+      let id = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[1];
+      if(!['1','2'].includes(role)) throw new Error("Sizda bunday huquq yo'q")
+
       let directions = await model.get(req.params.id)
       if(directions.error) throw new Error(directions.error)
       res.status(200).json({
@@ -21,6 +26,10 @@ module.exports = class Directions {
   }
   static async put(req,res){
     try {
+      let role = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[0];
+      let id = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[1];
+      if(!['1','2'].includes(role)) throw new Error("Sizda bunday huquq yo'q")
+
        let directions = await model.put(req.body)
        if(directions.error) throw new Error(directions.error)
        res.status(200).json({
@@ -38,6 +47,10 @@ module.exports = class Directions {
   }
   static async post(req,res){
     try{
+      let role = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[0];
+      let id = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[1];
+      if(!['1','2'].includes(role)) throw new Error("Sizda bunday huquq yo'q")
+      
         let post_direction = await model.post(req.body)
         if(post_direction.error) throw new Error(post_direction.error)
         res.status(200).json({
@@ -57,6 +70,10 @@ module.exports = class Directions {
   }
   static async delete(req,res){
     try {
+      let role = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[0];
+      let id = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[1];
+      if(!['1','2'].includes(role)) throw new Error("Sizda bunday huquq yo'q")
+      
        let target = req.body.id || req.params.id
        let delete_direction = await model.delete(target)
        if(delete_direction.error) throw new Error(delete_direction.error)

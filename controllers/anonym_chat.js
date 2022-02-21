@@ -1,9 +1,14 @@
 const model = require("../repositories/anonym_chat")
-
+const jwt = require('../utils/jwt')
 module.exports = class AnonymChat{
     static async post(req,res){
+
         try{
-            let post_message = await model.post(req.body)
+            // let role = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[0];
+            // let id = jwt.verify(req.headers.cookie.split('=')[1],'wieeil').split('|')[1];
+
+
+            let post_message = await model.post(req.body,req.headers.cookie)
             if( post_message.error ) throw new Error( post_message.error )
             res.status(200)
                .json({
@@ -22,7 +27,8 @@ module.exports = class AnonymChat{
     }
     static async get(req,res){
         try{
-           let get_message = await model.get(req.params.id)
+            let target = req.params.id || req.body.id
+           let get_message = await model.get(target)
            if( get_message.error ) throw new Error(get_message.error)
            res.status(200)
               .json({
